@@ -24,6 +24,10 @@ div {
 	background-color: rgb(0, 162, 255);
 }
 
+#animating {
+	color: rgb(9, 82, 21)
+}
+
 
 /*iframe { 
 	width: 500px;  It should not be 100% 
