@@ -2,9 +2,7 @@ body {
 	background-color: rgb(114, 202, 74);
 }
 
-a {
-	color: red;
-}
+
 
 /*p {
 	color: orange;
@@ -25,7 +23,7 @@ div {
 }
 
 #animating {
-	color: rgb(9, 82, 21)
+	color: rgb(0, 255, 42)
 }
 
 
@@ -35,3 +33,8 @@ div {
 	margin-left: auto;    Automatic margin from left  
 	margin-right: auto;  Automatic margin from right  
 }*/
+
+.alllinks_html{
+	color: rgb(146, 235, 3);
+}
+	
