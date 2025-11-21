@@ -134,6 +134,13 @@ main {
   box-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
 }
 
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
 .avatar.large {
   width: 52px;
   height: 52px;
