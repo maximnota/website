@@ -357,6 +357,11 @@ main {
   }
 }
 
+.project {
+  display: flex;
+  flex-direction: column;
+}
+
 .project h3 {
   margin-top: 0;
 }
@@ -364,6 +369,24 @@ main {
 .project p {
   margin: 0 0 0.85rem;
   color: var(--muted);
+}
+
+.project-actions {
+  margin-top: 0.5rem;
+}
+
+.project-btn {
+  align-self: flex-start;
+}
+
+@media (max-width: 640px) {
+  .project {
+    padding: 1rem;
+  }
+
+  .project-btn {
+    width: 100%;
+  }
 }
 
 .bullets {
