@@ -169,12 +169,48 @@ main {
 }
 
 @media (max-width: 720px) {
-  .header-inner {
-    gap: 0.75rem;
+  .site-header {
+    border-bottom-width: 0.5px;
   }
+
+  .header-inner {
+    gap: 0.5rem;
+    height: auto;
+    padding: 0.35rem 0;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    gap: 0.5rem;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .avatar.large {
+    width: 44px;
+    height: 44px;
+  }
+
+  .brand-name {
+    font-size: 0.9rem;
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+
   .main-nav {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    gap: 0.25rem;
+    margin-left: auto;
     overflow-x: auto;
+  }
+
+  .main-nav a {
+    padding: 0.3rem 0.55rem;
   }
 }
 
