@@ -1,3 +1,3 @@
 # website
 
-My first website with my brother
+The website responsible for everything about me.
