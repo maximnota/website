@@ -13,30 +13,31 @@ const allProjects = projectsData.projects;
   <section class="hero" aria-labelledby="hero-heading">
     <div class="container hero-grid">
       <div class="hero-text">
-        <p class="eyebrow">Hi, I'm Maxim</p>
+        <p class="eyebrow eyebrow-animate">Hi, I'm Maxim</p>
         <h1 id="hero-heading" class="hero-heading-animate">
           <span class="reveal-text">I like building </span>
           <span class="serif-highlight reveal-text">things</span>
           <span class="reveal-text"> on the web</span>
         </h1>
-        <p class="lead">
+        <p class="lead lead-animate">
           This is a small personal site to collect projects, experiments, and
           notes while I learn HTML, CSS, JavaScript, Rust, Luau, and Python.
         </p>
-        <div class="hero-actions">
+        <div class="hero-actions hero-actions-animate">
           <a class="btn primary" href="#projects">View projects</a>
           <a class="btn ghost" href="#socials">Get in touch</a>
         </div>
-        <dl class="hero-meta" aria-label="Quick facts">
-          <div class="kv">
+        <div class="hero-meta" aria-label="Quick facts">
+          <div class="meta-top kv">
             <dt>Location</dt>
             <dd>UK</dd>
           </div>
-          <div class="kv">
+          <div class="meta-line"></div>
+          <div class="meta-bottom kv">
             <dt>Focus</dt>
             <dd>Automation · Problem solving</dd>
           </div>
-        </dl>
+        </div>
       </div>
     </div>
   </section>
@@ -176,18 +177,50 @@ const allProjects = projectsData.projects;
       height: 100%;
     }
 
-    .hero-heading-animate {
-      opacity: 0; /* Hide initially to prevent FOUC */
-      animation: fadeInHeading 0.1s forwards; /* Reveal slightly after JS runs */
+    /* Initial hidden states to prevent FOUC */
+    .hero-heading-animate,
+    .eyebrow-animate {
+      opacity: 0;
+      animation: fadeInContainer 0.1s forwards;
     }
 
-    @keyframes fadeInHeading {
+    /* Lead paragraph, buttons, meta hidden initially for sequence */
+    .lead-animate,
+    .hero-actions-animate,
+    .meta-top,
+    .meta-bottom,
+    .meta-line {
+      opacity: 0;
+    }
+
+    .meta-line {
+      opacity: 1; /* Line just scales */
+      transform: scaleX(0);
+    }
+
+    @keyframes fadeInContainer {
       to {
         opacity: 1;
       }
     }
 
-    /* Smooth Character Fade In - Global because added by JS */
+    /* Word Slide Up Reveal (Eyebrow) */
+    :global(.word-reveal) {
+      opacity: 0;
+      transform: translateY(20px);
+      transition:
+        opacity 0.6s ease,
+        transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: inline-block;
+      white-space: pre;
+    }
+
+    :global(.word-reveal.visible) {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Char Blur Reveal (Heading) */
     :global(.char-reveal) {
       opacity: 0;
       filter: blur(8px);
@@ -203,15 +236,140 @@ const allProjects = projectsData.projects;
       filter: blur(0);
     }
 
-    /* Firefox Specific Overrides: Disable text sweep */
+    /* Lead Pop-In Animation */
+    .lead-animate.visible {
+      animation: popElastic 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes popElastic {
+      0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(10px);
+      }
+      60% {
+        opacity: 1;
+        transform: scale(1.05) translateY(0); /* More visible overshoot */
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0); /* Settle */
+      }
+    }
+
+    /* Hero Actions Fade In */
+    .hero-actions-animate.visible {
+      animation: fadeInQuick 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeInQuick {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Hero Meta Layout (Vertical Stack) */
+    .hero-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Override KV defaults to remove borders */
+    .hero-meta .kv {
+      border-bottom: none;
+      padding: 0.25rem 0;
+      width: 100%;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .meta-line {
+      width: 100%;
+      height: 1px; /* Horizontal divider */
+      background-color: var(--border-subtle);
+      transform-origin: center;
+    }
+
+    .meta-line.visible {
+      animation: growLine 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes growLine {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .meta-top,
+    .meta-bottom {
+      display: flex;
+    }
+
+    /* Top text slides from left */
+    .meta-top.visible {
+      animation: slideFromLeft 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    /* Bottom text slides from right */
+    .meta-bottom.visible {
+      animation: slideFromRight 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes slideFromLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideFromRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Firefox Specific Overrides: Disable animations */
     @-moz-document url-prefix() {
-      .hero-heading-animate {
+      .hero-heading-animate,
+      .eyebrow-animate,
+      .lead-animate,
+      .hero-actions-animate,
+      .meta-top,
+      .meta-bottom,
+      .meta-line {
         opacity: 1 !important;
         animation: none !important;
+        transform: none !important;
       }
 
+      :global(.word-reveal),
       :global(.char-reveal) {
         opacity: 1 !important;
+        transform: none !important;
         filter: none !important;
         transition: none !important;
       }
@@ -223,17 +381,38 @@ const allProjects = projectsData.projects;
     const grid = document.getElementById("projects-grid");
     const btns = document.querySelectorAll(".filter-btn");
 
-    // Fade Sweep Logic
-    const revealParts = document.querySelectorAll(".reveal-text");
+    // Combined Animation Logic
+    const eyebrow = document.querySelector(".eyebrow-animate");
+    const headingParts = document.querySelectorAll(".reveal-text");
+    const lead = document.querySelector(".lead-animate");
+    const buttons = document.querySelector(".hero-actions-animate");
+    const metaLine = document.querySelector(".meta-line");
+    const metaTop = document.querySelector(".meta-top");
+    const metaBottom = document.querySelector(".meta-bottom");
 
-    async function initFadeSweep() {
-      if (!revealParts.length) return;
+    async function initAnimations() {
+      // 1. Prepare Eybrow (Word Split)
+      if (eyebrow) {
+        const text = eyebrow.textContent || "";
+        eyebrow.textContent = "";
+        const words = text.split(/(\s+)/);
+        words.forEach((word) => {
+          if (!word) return;
+          const span = document.createElement("span");
+          if (/^\s+$/.test(word)) {
+            span.textContent = word;
+          } else {
+            span.textContent = word;
+            span.classList.add("word-reveal");
+          }
+          eyebrow.appendChild(span);
+        });
+      }
 
-      // Split text into chars
-      revealParts.forEach((part) => {
+      // 2. Prepare Heading (Char Split)
+      headingParts.forEach((part) => {
         const text = part.textContent || "";
-        part.textContent = ""; // Clear
-
+        part.textContent = "";
         for (let i = 0; i < text.length; i++) {
           const char = text.charAt(i);
           const span = document.createElement("span");
@@ -243,19 +422,57 @@ const allProjects = projectsData.projects;
         }
       });
 
-      // Delay start
+      // 3. Start Sequence
+
+      // Delay start slightly
       await new Promise((r) => setTimeout(r, 200));
 
-      // Animate chars one by one (staggered)
-      const allChars = document.querySelectorAll(".char-reveal");
-      for (const char of allChars) {
-        char.classList.add("visible");
-        await new Promise((r) => setTimeout(r, 30)); // Stagger delay
+      // Animate Eyebrow (Word Slide)
+      const eyebrowWords = document.querySelectorAll(
+        ".eyebrow-animate .word-reveal",
+      );
+      for (const element of eyebrowWords) {
+        const word = element as HTMLElement;
+        void word.offsetWidth; // Force Reflow
+        word.classList.add("visible");
+        await new Promise((r) => setTimeout(r, 100)); // Stagger
       }
+
+      // Small pause between eyebrow and heading
+      await new Promise((r) => setTimeout(r, 100));
+
+      // Animate Heading (Char Sweep)
+      const headingChars = document.querySelectorAll(
+        ".hero-heading-animate .char-reveal",
+      );
+      for (const element of headingChars) {
+        const char = element as HTMLElement;
+        void char.offsetWidth; // Force Reflow
+        char.classList.add("visible");
+        await new Promise((r) => setTimeout(r, 30)); // Fast stagger
+      }
+
+      // Animate Lead (Pop In)
+      if (lead) {
+        await new Promise((r) => setTimeout(r, 100)); // Pause after heading
+        lead.classList.add("visible");
+      }
+
+      // Animate Buttons & Meta (Final Stage)
+      await new Promise((r) => setTimeout(r, 400)); // Wait for lead pop to settle mostly
+
+      if (buttons) buttons.classList.add("visible"); // Fast fade
+
+      // Meta Sequence: Line -> Text
+      if (metaLine) metaLine.classList.add("visible");
+
+      await new Promise((r) => setTimeout(r, 200)); // Wait for line to grow a bit
+      if (metaTop) metaTop.classList.add("visible");
+      if (metaBottom) metaBottom.classList.add("visible");
     }
 
-    // Start animation
-    initFadeSweep();
+    // Start
+    initAnimations();
 
     // Initial State: Featured
     grid?.classList.add("filter-featured");
