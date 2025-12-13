@@ -37,9 +37,20 @@
   --shadow-md: 0 8px 24px -6px rgba(0, 0, 0, 0.4);
   --shadow-glow: 0 0 60px -15px rgba(255, 255, 255, 0.05);
 
-  /* Typography */
   --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Instrument Serif", serif;
+  
+  --accent-orange: #ff8c42; /* Soft vibrant orange */
+}
+
+/* Serif Highlight */
+.serif-highlight {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--accent-orange);
+  font-weight: 400; /* Instrument Serif is naturally bold/distinct */
+  padding-right: 0.1em; /* Adjust spacing for italic */
 }
 
 [data-theme="light"] {
@@ -111,7 +122,8 @@ p {
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-.reveal.active {
+/* Only show revealed elements if they are active AND the body is scrolled */
+body.scrolled-mode .reveal.active {
   opacity: 1;
   transform: translateY(0);
 }
