@@ -3,7 +3,7 @@ const isHome = Astro.url.pathname === "/";
 const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
 ---
 
-<header class="site-header" role="banner">
+<header class:list={["site-header", { "scroll-reveal": isHome }]} role="banner">
   <div class="container header-inner">
     <a class="brand" href={isHome ? "#top" : "/"}>
       <div class="avatar" aria-hidden="true">
@@ -120,8 +120,8 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
 </script>
 
 <style>
-  /* Header Scroll Animation */
-  .site-header {
+  /* Header Scroll Animation - Only for Home */
+  .site-header.scroll-reveal {
     opacity: 0;
     transform: translateY(-1rem);
     transition:
@@ -131,7 +131,7 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
   }
 
   /* When body has scrolled-mode, show header */
-  :global(body.scrolled-mode) .site-header {
+  :global(body.scrolled-mode) .site-header.scroll-reveal {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
