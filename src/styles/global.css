@@ -145,6 +145,19 @@ body.scrolled-mode .pop-reveal.active {
   filter: blur(0);
 }
 
+/* Firefox Specific Overrides: Disable animations */
+@-moz-document url-prefix() {
+  .reveal,
+  .pop-reveal,
+  body.scrolled-mode .reveal.active,
+  body.scrolled-mode .pop-reveal.active {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
+
 a {
   color: inherit;
   text-decoration: none;

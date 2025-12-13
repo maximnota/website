@@ -202,6 +202,20 @@ const allProjects = projectsData.projects;
       opacity: 1;
       filter: blur(0);
     }
+
+    /* Firefox Specific Overrides: Disable text sweep */
+    @-moz-document url-prefix() {
+      .hero-heading-animate {
+        opacity: 1 !important;
+        animation: none !important;
+      }
+
+      :global(.char-reveal) {
+        opacity: 1 !important;
+        filter: none !important;
+        transition: none !important;
+      }
+    }
   </style>
 
   <script>
