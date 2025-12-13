@@ -104,9 +104,39 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
   document
     .getElementById("theme-toggle")
     ?.addEventListener("click", handleToggleClick);
+
+  // Scroll Reveal for Header
+  const header = document.querySelector(".site-header");
+  const handleScroll = () => {
+    if (window.scrollY > 50) {
+      header?.classList.add("scrolled");
+    } else {
+      header?.classList.remove("scrolled");
+    }
+  };
+
+  // Run on mount and scroll
+  window.addEventListener("scroll", handleScroll);
+  handleScroll();
 </script>
 
 <style>
+  /* Header Scroll Animation */
+  .site-header {
+    opacity: 0;
+    transform: translateY(-1rem);
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s ease;
+    pointer-events: none; /* Prevent clicks when hidden */
+  }
+
+  .site-header.scrolled {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
   /* By default, hide both icons to prevent overlap */
   #theme-toggle .icon {
     display: none;
