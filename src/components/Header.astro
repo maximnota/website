@@ -16,6 +16,7 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
     </a>
 
     <nav class="main-nav" aria-label="Primary">
+      <div id="nav-marker"></div>
       <a href={homeAnchor("#about")}>About</a>
       <a href={homeAnchor("#projects")}>Projects</a>
       <a href={homeAnchor("#now")}>Now</a>
@@ -117,6 +118,27 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
   // Run on mount and scroll
   window.addEventListener("scroll", handleScroll);
   handleScroll();
+
+  // Sliding Nav Marker Logic
+  const navContainer = document.querySelector(".main-nav");
+  const navMarker = document.getElementById("nav-marker");
+  const navLinks = document.querySelectorAll(".main-nav a");
+
+  if (navContainer && navMarker) {
+    navLinks.forEach((link) => {
+      link.addEventListener("mouseenter", (e) => {
+        const target = e.target;
+        // Update marker position and size
+        navMarker.style.width = `${target.offsetWidth}px`;
+        navMarker.style.left = `${target.offsetLeft}px`;
+        navMarker.style.opacity = "1";
+      });
+    });
+
+    navContainer.addEventListener("mouseleave", () => {
+      navMarker.style.opacity = "0";
+    });
+  }
 </script>
 
 <style>
@@ -135,6 +157,27 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
+  }
+
+  /* Sliding Marker Styles */
+  .main-nav {
+    position: relative; /* Context */
+  }
+
+  #nav-marker {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 100%; /* Or fixed height e.g. 80% */
+    background: var(--accent-soft);
+    border-radius: var(--radius-full);
+    z-index: -1; /* Behind text */
+    transition:
+      left 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+      width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+      opacity 0.2s ease;
+    opacity: 0;
+    pointer-events: none;
   }
 
   /* By default, hide both icons to prevent overlap */

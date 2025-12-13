@@ -14,8 +14,15 @@ const allProjects = projectsData.projects;
     <div class="container hero-grid">
       <div class="hero-text">
         <p class="eyebrow">Hi, I'm Maxim</p>
-        <h1 id="hero-heading">
-          I like building <span class="serif-highlight">things</span> on the web.
+        <h1
+          id="hero-heading"
+          class="typewriter-heading"
+          aria-label="I like building things on the web."
+        >
+          <span class="type-part" data-text="I like building "></span>
+          <span class="serif-highlight type-part" data-text="things"></span>
+          <span class="type-part" data-text=" on the web."></span>
+          <span class="cursor">|</span>
         </h1>
         <p class="lead">
           This is a small personal site to collect projects, experiments, and
@@ -173,12 +180,62 @@ const allProjects = projectsData.projects;
       display: block;
       height: 100%;
     }
+
+    /* Typewriter Cursor */
+    .cursor {
+      display: inline-block;
+      font-weight: 100;
+      color: var(--accent);
+      margin-left: 2px;
+      animation: blink 1s step-end infinite paused; /* Only blink when done */
+    }
+
+    .cursor.blinking {
+      animation-play-state: running;
+    }
+
+    @keyframes blink {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+    }
   </style>
 
   <script>
     // Filter Logic
     const grid = document.getElementById("projects-grid");
     const btns = document.querySelectorAll(".filter-btn");
+
+    // Typewriter Logic
+    const headingParts = document.querySelectorAll(".type-part");
+    const cursor = document.querySelector(".cursor");
+
+    async function typeWriter() {
+      if (!headingParts.length) return;
+
+      // Delay start slightly
+      await new Promise((r) => setTimeout(r, 500));
+
+      for (const part of headingParts) {
+        const text = part.getAttribute("data-text") || "";
+        part.textContent = "";
+
+        for (let i = 0; i < text.length; i++) {
+          part.textContent += text.charAt(i);
+          await new Promise((r) => setTimeout(r, 50 + Math.random() * 30)); // Random typing speed
+        }
+      }
+
+      // Blink cursor after typing
+      cursor?.classList.add("blinking");
+    }
+
+    // Start typing
+    typeWriter();
 
     // Initial State: Featured
     grid?.classList.add("filter-featured");

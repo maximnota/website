@@ -119,26 +119,30 @@ p {
 .reveal {
   opacity: 0;
   transform: translateY(2rem);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  filter: blur(10px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out, filter 0.6s ease-out;
 }
 
 /* Only show revealed elements if they are active AND the body is scrolled */
 body.scrolled-mode .reveal.active {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
 }
 
 /* Pop Reveal Animation (Scale + Fade with Expo Ease) */
 .pop-reveal {
   opacity: 0;
   transform: scale(0.9) translateY(2rem);
-  transition: opacity 0.5s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: blur(10px);
+  transition: opacity 0.5s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease-out;
 }
 
 /* Only show pop elements if they are active AND the body is scrolled */
 body.scrolled-mode .pop-reveal.active {
   opacity: 1;
   transform: scale(1) translateY(0);
+  filter: blur(0);
 }
 
 a {
@@ -257,7 +261,7 @@ main {
 
 .main-nav a:hover {
   color: var(--accent);
-  background: var(--accent-soft);
+  /* background: var(--accent-soft); -- Removed for sliding marker */
 }
 
 /* Responsive Nav */
