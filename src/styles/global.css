@@ -70,6 +70,7 @@
 html {
   scroll-behavior: smooth;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  font-size: 112.5%; /* Scale up by 12.5% (approx 18px base) */
 }
 
 body {
