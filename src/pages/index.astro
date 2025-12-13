@@ -1,0 +1,304 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import projectsData from "../../projects.json";
+
+const allProjects = projectsData.projects;
+---
+
+<BaseLayout
+  title="Maxim Gannota — Personal Site"
+  description="Personal site for Maxim Gannota: projects, skills, and ways to get in touch."
+>
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <p class="eyebrow">Hi, I'm Maxim</p>
+        <h1 id="hero-heading">I like building things on the web.</h1>
+        <p class="lead">
+          This is a small personal site to collect projects, experiments, and
+          notes while I learn HTML, CSS, JavaScript, Rust, Luau, and Python.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#projects">View projects</a>
+          <a class="btn ghost" href="#contact">Get in touch</a>
+        </div>
+        <dl class="hero-meta" aria-label="Quick facts">
+          <div class="kv">
+            <dt>Location</dt>
+            <dd>UK</dd>
+          </div>
+          <div class="kv">
+            <dt>Focus</dt>
+            <dd>Automation · Problem solving</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section" aria-labelledby="about-heading">
+    <div class="container section-inner two-column">
+      <div>
+        <h2 id="about-heading">About</h2>
+        <p>
+          I'm using this site as a place to practice web development. It’s now
+          built with Astro to keep the pages fast and the content easy to
+          maintain.
+        </p>
+        <p>
+          My goals right now are to get comfortable with responsive layouts,
+          understand how the browser works, and slowly build more interesting
+          projects.
+        </p>
+      </div>
+      <div class="card stack">
+        <div>
+          <h3>What I'm practicing</h3>
+          <ul class="bullets">
+            <li>Optimized rust developmnent.</li>
+            <li>Python machine learning development</li>
+            <li>Clean Website Design</li>
+            <li>Problem solving</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="section" aria-labelledby="projects-heading">
+    <div class="container">
+      <header class="section-header projects-header">
+        <div>
+          <h2 id="projects-heading">Projects</h2>
+          <p class="section-lead">Featured projects.</p>
+        </div>
+        <div class="filter-toggle" aria-label="Filter projects">
+          <button class="filter-btn active" data-filter="featured"
+            >Featured</button
+          >
+          <button class="filter-btn" data-filter="all">All</button>
+        </div>
+      </header>
+
+      <div class="grid cards" id="projects-grid">
+        {
+          allProjects.map((project) => (
+            <div class="project-wrapper" data-featured={project.featured}>
+              <ProjectCard project={project} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section id="now" class="section section-alt" aria-labelledby="now-heading">
+    <div class="container section-inner two-column">
+      <div>
+        <h2 id="now-heading">What I'm doing now</h2>
+        <p>Focusing on practicing for the British Informatics Olympiad</p>
+      </div>
+      <div class="card">
+        <ul class="bullets tight">
+          <li>Doing past papers from previous years.</li>
+          <li>Leetcode questions</li>
+          <li>Learning algorithms</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    /* Projects Header with Toggle */
+    .projects-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .filter-toggle {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 0.25rem;
+      border-radius: var(--radius-full);
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      background: var(--card);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Filter Logic - Default is show all, but we use JS to toggle class */
+    /* If wrapper does NOT have data-featured="true", hide it when grid has class 'filter-active' */
+
+    #projects-grid.filter-featured
+      .project-wrapper:not([data-featured="true"]) {
+      display: none;
+    }
+
+    .project-wrapper {
+      display: block;
+      height: 100%;
+    }
+  </style>
+
+  <script>
+    // Filter Logic
+    const grid = document.getElementById("projects-grid");
+    const btns = document.querySelectorAll(".filter-btn");
+
+    // Initial State: Featured
+    grid?.classList.add("filter-featured");
+
+    btns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // Toggle active class
+        btns.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const filter = btn.getAttribute("data-filter");
+
+        if (filter === "featured") {
+          grid?.classList.add("filter-featured");
+        } else {
+          grid?.classList.remove("filter-featured");
+        }
+      });
+    });
+  </script>
+
+  <section
+    id="socials"
+    class="section socials"
+    aria-labelledby="socials-heading"
+  >
+    <div class="container section-inner">
+      <!-- Removed two-column -->
+      <div class="socials-text">
+        <h2 id="socials-heading">Socials</h2>
+        <p>
+          You can also find me on GitHub and Instagram, or message me on
+          Telegram.
+        </p>
+      </div>
+      <div class="grid cards socials-grid">
+        <article class="card">
+          <h3>GitHub</h3>
+          <p>
+            <a
+              class="social-link"
+              href="https://github.com/maximnota"
+              target="_blank"
+              rel="noopener"
+            >
+              @maximnota
+            </a>
+          </p>
+        </article>
+        <article class="card">
+          <h3>Telegram</h3>
+          <p>
+            <a
+              class="social-link social-handle"
+              href="https://t.me/maximnota"
+              target="_blank"
+              rel="noopener"
+            >
+              @maximnota
+            </a>
+          </p>
+        </article>
+        <article class="card">
+          <h3>Discord</h3>
+          <p>
+            <a
+              class="social-link"
+              href="https://discord.com/users/1080186386176544808"
+              target="_blank"
+              rel="noopener"
+            >
+              @maximnota
+            </a>
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .socials-text {
+      margin-bottom: 2rem;
+    }
+
+    .socials-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+    }
+
+    .socials-grid .card {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    .socials-grid h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .socials-grid p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+  </style>
+
+  <section id="contact" class="section" aria-labelledby="contact-heading">
+    <div class="container section-inner two-column">
+      <div>
+        <h2 id="contact-heading">Contact</h2>
+        <p>
+          If you'd like to say hi, share a resource, or point out a bug on this
+          site, you can reach me by email.
+        </p>
+        <p class="contact-link">
+          <a href="mailto:maximnota@maximnota.dev" class="btn primary"
+            >Email me</a
+          >
+        </p>
+      </div>
+      <div class="card">
+        <p class="note">
+          This is a personal project site. Please keep messages friendly and
+          avoid sending anything private or sensitive.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

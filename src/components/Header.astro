@@ -1,0 +1,90 @@
+---
+const isHome = Astro.url.pathname === "/";
+const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
+---
+
+<header class="site-header" role="banner">
+  <div class="container header-inner">
+    <a class="brand" href={isHome ? "#top" : "/"}>
+      <div class="avatar" aria-hidden="true">
+        <img src="/picture.jpg" alt="Profile picture of Maxim Gannota" />
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">Maxim Gannota</span>
+        <span class="brand-subtitle">Student · Developer in progress</span>
+      </div>
+    </a>
+
+    <nav class="main-nav" aria-label="Primary">
+      <a href={homeAnchor("#about")}>About</a>
+      <a href={homeAnchor("#projects")}>Projects</a>
+      <a href={homeAnchor("#now")}>Now</a>
+      <a href={homeAnchor("#socials")}>Socials</a>
+      <a href={homeAnchor("#contact")}>Contact</a>
+      <a href="/blog">Blog</a>
+      
+      <button id="theme-toggle" aria-label="Toggle theme">
+        <!-- Sun (light) -->
+        <svg class="icon sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <!-- Moon (dark) -->
+        <svg class="icon moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  const theme = (() => {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+      return localStorage.getItem('theme');
+    }
+    if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      return 'light';
+    }
+    return 'dark'; // Default to dark for this site unless light pref is explicit
+  })();
+
+  if (theme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+
+  window.localStorage.setItem('theme', theme);
+
+  const handleToggleClick = () => {
+    const element = document.documentElement;
+    if (element.getAttribute('data-theme') === 'light') {
+      element.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      element.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
+  document.getElementById("theme-toggle")?.addEventListener("click", handleToggleClick);
+</script>
+
+<style>
+  /* By default, hide both icons to prevent overlap */
+  #theme-toggle .icon {
+    display: none;
+  }
+  
+  /* Light theme: Show Moon */
+  :global(html[data-theme="light"]) #theme-toggle .moon {
+    display: block;
+  }
+  
+  /* Dark theme: Show Sun */
+  :global(html[data-theme="dark"]) #theme-toggle .sun {
+    display: block;
+  }
+
+  /* Fallback: If no theme set (SSR/No-JS), default to Dark (Sun) */
+  :global(html:not([data-theme])) #theme-toggle .sun {
+    display: block;
+  }
+</style>
+

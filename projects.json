@@ -1,0 +1,291 @@
+{
+  "site": {
+    "owner": "Maxim Gannota"
+  },
+  "projects": [
+    {
+      "slug": "personal-site",
+      "title": "Personal Site",
+      "description": "You're looking at it. A simple, responsive layout with a focus on typography and a small color palette.",
+      "tags": [
+        "Astro",
+        "CSS",
+        "Design"
+      ],
+      "featured": true,
+      "links": {
+        "details": "/"
+      }
+    },
+    {
+      "slug": "rps-minus-one",
+      "title": "Rock Paper Scissors AI & Minus One Version",
+      "description": "AI bot for Rock Paper Scissors with a prediction model and a minus one variant.",
+      "tags": [
+        "Rust",
+        "Machine Learning",
+        "Analytics"
+      ],
+      "featured": true,
+      "links": {
+        "github": "https://github.com/maximnota/RPS-MInus-One"
+      }
+    },
+    {
+      "slug": "neverhome-discord-bot",
+      "title": "A utility discord bot.",
+      "description": "For my Roblox game neverhome that helps with banning people from both game and discord on Roblox, and provides the relevant information for you when banned, it also provides options for mass banning, etc.",
+      "tags": [
+        "Roblox API",
+        "Python",
+        "CLoud hosting"
+      ],
+      "featured": true,
+      "links": {
+        "github": "https://github.com/maximnota/neverhome-discord-bot"
+      }
+    },
+    {
+      "slug": "video-generator",
+      "title": "AI Video Generator",
+      "description": "An AI that generates videos tailored for YouTube Shorts format, automating editing and content workflows.",
+      "tags": [
+        "Python",
+        "LLMs",
+        "Video Automation"
+      ],
+      "featured": true,
+      "links": {
+        "github": "https://github.com/maximnota/video-generator"
+      }
+    },
+    {
+      "slug": "website",
+      "title": "Website",
+      "description": "First website created with my brother, built with HTML and CSS.",
+      "tags": [
+        "HTML",
+        "CSS",
+        "Web"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/website"
+      }
+    },
+    {
+      "slug": "chess-engine",
+      "title": "Chess Engine",
+      "description": "A basic Rust-based chess engine built for fun and learning, implementing core move logic and game state.",
+      "tags": [
+        "Rust",
+        "Game",
+        "AI"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/chess-engine"
+      }
+    },
+    {
+      "slug": "rust-website-template",
+      "title": "Rust Website Template",
+      "description": "A template for creating a bare-metal Rust backend serving HTML, CSS, and JS assets.",
+      "tags": [
+        "Rust",
+        "Web",
+        "Template"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/Rust-website-template"
+      }
+    },
+    {
+      "slug": "notes",
+      "title": "Notes",
+      "description": "A simple terminal-based note-taking app built in Rust for quick and efficient notes.",
+      "tags": [
+        "Rust",
+        "CLI",
+        "Productivity"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/Notes"
+      }
+    },
+    {
+      "slug": "notes-cli",
+      "title": "Notes CLI",
+      "description": "Command-line notes application focused on simplicity and ease of use.",
+      "tags": [
+        "Rust",
+        "CLI"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/Notes-cli"
+      }
+    },
+    {
+      "slug": "rust-crawler",
+      "title": "Rust Crawler",
+      "description": "A lightweight Rust crawler designed to search for specified keywords starting from a seed URL.",
+      "tags": [
+        "Rust",
+        "Crawler",
+        "Networking"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/rust-crawler"
+      }
+    },
+    {
+      "slug": "durak-card-game",
+      "title": "Durak Card Game",
+      "description": "Terminal-based Rust implementation of the Durak card game with basic gameplay functionality.",
+      "tags": [
+        "Rust",
+        "Game"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/Durak-card-game"
+      }
+    },
+    {
+      "slug": "maximnota",
+      "title": "Maximnota Profile README",
+      "description": "Personal GitHub profile README describing interests in programming and current projects.",
+      "tags": [
+        "Profile",
+        "Introduction"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/maximnota"
+      }
+    },
+    {
+      "slug": "mergedbs",
+      "title": "MergeDBs",
+      "description": "Tool or script for merging multiple database dumps efficiently.",
+      "tags": [
+        "Python",
+        "Database"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/MergeDBs"
+      }
+    },
+    {
+      "slug": "dstorage",
+      "title": "dStorage",
+      "description": "Rust-powered distributed storage prototype for scalable data persistence.",
+      "tags": [
+        "Rust",
+        "Storage",
+        "Systems"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/dStorage"
+      }
+    },
+    {
+      "slug": "smart-notes",
+      "title": "Smart Notes",
+      "description": "Python project for smarter note taking with enhanced organization features.",
+      "tags": [
+        "Python",
+        "Productivity"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/Smart-Notes"
+      }
+    },
+    {
+      "slug": "tic-tac-toe",
+      "title": "Tic Tac Toe",
+      "description": "Classic Tic Tac Toe game implemented in Python with basic AI support.",
+      "tags": [
+        "Python",
+        "Game"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/Tic-Tac-Toe"
+      }
+    },
+    {
+      "slug": "enhanced-pyqt",
+      "title": "Enhanced PyQT",
+      "description": "Simplified Python wrapper or alternative utilities for PyQT applications.",
+      "tags": [
+        "Python",
+        "GUI"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/Enhanced-PyQT"
+      }
+    },
+    {
+      "slug": "sq-login-register",
+      "title": "SQ Login Register",
+      "description": "Python SQL-backed login and registration interface.",
+      "tags": [
+        "Python",
+        "SQL",
+        "Authentication"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/SQLoginRegister"
+      }
+    },
+    {
+      "slug": "login-and-register",
+      "title": "Login and Register",
+      "description": "Simple Python project implementing login and registration logic.",
+      "tags": [
+        "Python",
+        "Authentication"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/Login-and-Register"
+      }
+    },
+    {
+      "slug": "nice-website",
+      "title": "Nice Website",
+      "description": "HTML site project focused on aesthetic and usability improvements compared to earlier versions.",
+      "tags": [
+        "HTML",
+        "Web"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/nice-website"
+      }
+    },
+    {
+      "slug": "unity-first-project",
+      "title": "Unity First Project",
+      "description": "My first Unity project following beginner tutorials to learn game development with C#.",
+      "tags": [
+        "Unity",
+        "C#"
+      ],
+      "featured": false,
+      "links": {
+        "github": "https://github.com/maximnota/unity-first-project"
+      }
+    }
+  ]
+}

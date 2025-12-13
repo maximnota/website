@@ -1,0 +1,213 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = import.meta.glob("../../../blogs/*.md", { eager: true });
+
+  return Object.entries(posts).map(([path, module]: [string, any]) => {
+    const slug = path.split("/").pop()?.replace(".md", "") ?? "";
+    return {
+      params: { slug },
+      props: { post: module },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content, frontmatter } = post;
+---
+
+<BaseLayout
+  title={`${frontmatter.title} — Maxim Gannota`}
+  description={frontmatter.description}
+>
+  <article class="section">
+    <div class="container post-container">
+      <header class="post-header">
+        <a href="/blog" class="back-link">← Back to blog</a>
+        <div class="meta">
+          <time datetime={frontmatter.pubDate}>
+            {
+              new Date(frontmatter.pubDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+            }
+          </time>
+          {
+            frontmatter.tags && (
+              <ul class="tags">
+                {frontmatter.tags.map((tag: string) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+            )
+          }
+        </div>
+        <h1 class="post-title">{frontmatter.title}</h1>
+        {
+          frontmatter.description && (
+            <p class="post-lead">{frontmatter.description}</p>
+          )
+        }
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-container {
+    max-width: 720px;
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .post-header .tags {
+    margin: 0;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .time {
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .post-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.1;
+    margin: 0 0 1rem;
+    background: linear-gradient(to right, #fff, #9ca3af);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent; /* Fallback */
+    /* Ensure visible if gradient fails or in light mode override */
+  }
+
+  :global([data-theme="light"]) .post-title {
+    background: none;
+    -webkit-text-fill-color: initial;
+    color: var(--text);
+  }
+
+  .post-lead {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* Prose / Markdown Content Styling */
+  .prose :global(h2) {
+    font-size: 1.75rem;
+    margin: 2.5rem 0 1rem;
+    color: var(--text);
+  }
+
+  .prose :global(h3) {
+    font-size: 1.4rem;
+    margin: 2rem 0 0.75rem;
+    color: var(--text);
+  }
+
+  .prose :global(p) {
+    margin-bottom: 1.5rem;
+    line-height: 1.75;
+    color: #d1d5db; /* slightly lighter than muted */
+  }
+
+  :global([data-theme="light"]) .prose :global(p) {
+    color: #374151;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+    color: #d1d5db;
+  }
+
+  :global([data-theme="light"]) .prose :global(ul),
+  :global([data-theme="light"]) .prose :global(ol) {
+    color: #374151;
+  }
+
+  .prose :global(li) {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+
+  .prose :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .prose :global(pre) {
+    padding: 1.25rem;
+    border-radius: var(--radius-sm);
+    background: #0f172a;
+    border: 1px solid var(--border-subtle);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .prose :global(code) {
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9em;
+  }
+
+  .prose :global(:not(pre) > code) {
+    background: rgba(148, 163, 184, 0.1);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  .prose :global(blockquote) {
+    border-left: 4px solid var(--accent);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .prose :global(img) {
+    border-radius: var(--radius-md);
+    margin: 2rem auto;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .prose :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--border-subtle);
+    margin: 3rem 0;
+  }
+</style>
