@@ -377,121 +377,125 @@ const allProjects = projectsData.projects;
   </style>
 
   <script>
-    // Filter Logic
-    const grid = document.getElementById("projects-grid");
-    const btns = document.querySelectorAll(".filter-btn");
+    const initHome = () => {
+      // Filter Logic
+      const grid = document.getElementById("projects-grid");
+      const btns = document.querySelectorAll(".filter-btn");
 
-    // Combined Animation Logic
-    const eyebrow = document.querySelector(".eyebrow-animate");
-    const headingParts = document.querySelectorAll(".reveal-text");
-    const lead = document.querySelector(".lead-animate");
-    const buttons = document.querySelector(".hero-actions-animate");
-    const metaLine = document.querySelector(".meta-line");
-    const metaTop = document.querySelector(".meta-top");
-    const metaBottom = document.querySelector(".meta-bottom");
+      // Combined Animation Logic
+      const eyebrow = document.querySelector(".eyebrow-animate");
+      const headingParts = document.querySelectorAll(".reveal-text");
+      const lead = document.querySelector(".lead-animate");
+      const buttons = document.querySelector(".hero-actions-animate");
+      const metaLine = document.querySelector(".meta-line");
+      const metaTop = document.querySelector(".meta-top");
+      const metaBottom = document.querySelector(".meta-bottom");
 
-    async function initAnimations() {
-      // 1. Prepare Eybrow (Word Split)
-      if (eyebrow) {
-        const text = eyebrow.textContent || "";
-        eyebrow.textContent = "";
-        const words = text.split(/(\s+)/);
-        words.forEach((word) => {
-          if (!word) return;
-          const span = document.createElement("span");
-          if (/^\s+$/.test(word)) {
-            span.textContent = word;
-          } else {
-            span.textContent = word;
-            span.classList.add("word-reveal");
+      async function initAnimations() {
+        // 1. Prepare Eybrow (Word Split)
+        if (eyebrow) {
+          const text = eyebrow.textContent || "";
+          eyebrow.textContent = "";
+          const words = text.split(/(\s+)/);
+          words.forEach((word) => {
+            if (!word) return;
+            const span = document.createElement("span");
+            if (/^\s+$/.test(word)) {
+              span.textContent = word;
+            } else {
+              span.textContent = word;
+              span.classList.add("word-reveal");
+            }
+            eyebrow.appendChild(span);
+          });
+        }
+
+        // 2. Prepare Heading (Char Split)
+        headingParts.forEach((part) => {
+          const text = part.textContent || "";
+          part.textContent = "";
+          for (let i = 0; i < text.length; i++) {
+            const char = text.charAt(i);
+            const span = document.createElement("span");
+            span.textContent = char;
+            span.classList.add("char-reveal");
+            part.appendChild(span);
           }
-          eyebrow.appendChild(span);
         });
-      }
 
-      // 2. Prepare Heading (Char Split)
-      headingParts.forEach((part) => {
-        const text = part.textContent || "";
-        part.textContent = "";
-        for (let i = 0; i < text.length; i++) {
-          const char = text.charAt(i);
-          const span = document.createElement("span");
-          span.textContent = char;
-          span.classList.add("char-reveal");
-          part.appendChild(span);
+        // 3. Start Sequence
+
+        // Delay start slightly
+        await new Promise((r) => setTimeout(r, 200));
+
+        // Animate Eyebrow (Word Slide)
+        const eyebrowWords = document.querySelectorAll(
+          ".eyebrow-animate .word-reveal",
+        );
+        for (const element of eyebrowWords) {
+          const word = element as HTMLElement;
+          void word.offsetWidth; // Force Reflow
+          word.classList.add("visible");
+          await new Promise((r) => setTimeout(r, 100)); // Stagger
         }
-      });
 
-      // 3. Start Sequence
+        // Small pause between eyebrow and heading
+        await new Promise((r) => setTimeout(r, 100));
 
-      // Delay start slightly
-      await new Promise((r) => setTimeout(r, 200));
-
-      // Animate Eyebrow (Word Slide)
-      const eyebrowWords = document.querySelectorAll(
-        ".eyebrow-animate .word-reveal",
-      );
-      for (const element of eyebrowWords) {
-        const word = element as HTMLElement;
-        void word.offsetWidth; // Force Reflow
-        word.classList.add("visible");
-        await new Promise((r) => setTimeout(r, 100)); // Stagger
-      }
-
-      // Small pause between eyebrow and heading
-      await new Promise((r) => setTimeout(r, 100));
-
-      // Animate Heading (Char Sweep)
-      const headingChars = document.querySelectorAll(
-        ".hero-heading-animate .char-reveal",
-      );
-      for (const element of headingChars) {
-        const char = element as HTMLElement;
-        void char.offsetWidth; // Force Reflow
-        char.classList.add("visible");
-        await new Promise((r) => setTimeout(r, 30)); // Fast stagger
-      }
-
-      // Animate Lead (Pop In)
-      if (lead) {
-        await new Promise((r) => setTimeout(r, 100)); // Pause after heading
-        lead.classList.add("visible");
-      }
-
-      // Animate Buttons & Meta (Final Stage)
-      await new Promise((r) => setTimeout(r, 400)); // Wait for lead pop to settle mostly
-
-      if (buttons) buttons.classList.add("visible"); // Fast fade
-
-      // Meta Sequence: Line -> Text
-      if (metaLine) metaLine.classList.add("visible");
-
-      await new Promise((r) => setTimeout(r, 200)); // Wait for line to grow a bit
-      if (metaTop) metaTop.classList.add("visible");
-      if (metaBottom) metaBottom.classList.add("visible");
-    }
-
-    // Start
-    initAnimations();
-
-    // Initial State: Featured
-    grid?.classList.add("filter-featured");
-
-    btns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        // Toggle active class
-        btns.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        const filter = btn.getAttribute("data-filter");
-
-        if (filter === "featured") {
-          grid?.classList.add("filter-featured");
-        } else {
-          grid?.classList.remove("filter-featured");
+        // Animate Heading (Char Sweep)
+        const headingChars = document.querySelectorAll(
+          ".hero-heading-animate .char-reveal",
+        );
+        for (const element of headingChars) {
+          const char = element as HTMLElement;
+          void char.offsetWidth; // Force Reflow
+          char.classList.add("visible");
+          await new Promise((r) => setTimeout(r, 30)); // Fast stagger
         }
+
+        // Animate Lead (Pop In)
+        if (lead) {
+          await new Promise((r) => setTimeout(r, 100)); // Pause after heading
+          lead.classList.add("visible");
+        }
+
+        // Animate Buttons & Meta (Final Stage)
+        await new Promise((r) => setTimeout(r, 400)); // Wait for lead pop to settle mostly
+
+        if (buttons) buttons.classList.add("visible"); // Fast fade
+
+        // Meta Sequence: Line -> Text
+        if (metaLine) metaLine.classList.add("visible");
+
+        await new Promise((r) => setTimeout(r, 200)); // Wait for line to grow a bit
+        if (metaTop) metaTop.classList.add("visible");
+        if (metaBottom) metaBottom.classList.add("visible");
+      }
+
+      // Start
+      initAnimations();
+
+      // Initial State: Featured
+      grid?.classList.add("filter-featured");
+
+      btns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Toggle active class
+          btns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const filter = btn.getAttribute("data-filter");
+
+          if (filter === "featured") {
+            grid?.classList.add("filter-featured");
+          } else {
+            grid?.classList.remove("filter-featured");
+          }
+        });
       });
-    });
+    };
+
+    document.addEventListener("astro:page-load", initHome);
   </script>
 
   <section

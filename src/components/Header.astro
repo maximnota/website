@@ -72,73 +72,90 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
   </div>
 </header>
 
-<script is:inline>
-  const theme = (() => {
-    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-      return localStorage.getItem("theme");
-    }
-    if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-      return "light";
-    }
-    return "dark"; // Default to dark for this site unless light pref is explicit
-  })();
+<script>
+  const initHeader = () => {
+    // Theme Toggle Logic
+    const handleToggleClick = () => {
+      const element = document.documentElement;
+      const isLight = element.getAttribute("data-theme") === "light";
+      const newTheme = isLight ? "dark" : "light";
 
-  if (theme === "light") {
-    document.documentElement.setAttribute("data-theme", "light");
-  } else {
-    document.documentElement.setAttribute("data-theme", "dark");
-  }
+      element.setAttribute("data-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
+    };
 
-  window.localStorage.setItem("theme", theme);
+    const toggleBtn = document.getElementById("theme-toggle");
+    // Remove old listener to avoid duplicates if re-running (though atomic replacements help)
+    toggleBtn?.removeEventListener("click", handleToggleClick);
+    toggleBtn?.addEventListener("click", handleToggleClick);
 
-  const handleToggleClick = () => {
-    const element = document.documentElement;
-    if (element.getAttribute("data-theme") === "light") {
-      element.setAttribute("data-theme", "dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      element.setAttribute("data-theme", "light");
-      localStorage.setItem("theme", "light");
-    }
-  };
+    // Scroll Reveal for Header & Site
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        document.body.classList.add("scrolled-mode");
+      } else {
+        document.body.classList.remove("scrolled-mode");
+      }
+    };
 
-  document
-    .getElementById("theme-toggle")
-    ?.addEventListener("click", handleToggleClick);
+    window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Check initial state
 
-  // Scroll Reveal for Header & Site
-  const handleScroll = () => {
-    if (window.scrollY > 50) {
-      document.body.classList.add("scrolled-mode");
-    } else {
-      document.body.classList.remove("scrolled-mode");
-    }
-  };
+    // Sliding Nav Marker Logic
+    const navContainer = document.querySelector(".main-nav") as HTMLElement;
+    const navMarker = document.getElementById("nav-marker");
+    const navLinks = document.querySelectorAll(".main-nav a");
 
-  // Run on mount and scroll
-  window.addEventListener("scroll", handleScroll);
-  handleScroll();
+    // Sliding Nav Marker Logic
+    // Variables already declared above in initHeader scope, ensuring no redeclaration.
 
-  // Sliding Nav Marker Logic
-  const navContainer = document.querySelector(".main-nav");
-  const navMarker = document.getElementById("nav-marker");
-  const navLinks = document.querySelectorAll(".main-nav a");
+    if (navContainer && navMarker) {
+      navLinks.forEach((link) => {
+        link.addEventListener("mouseenter", (e) => {
+          const target = e.target as HTMLElement;
+          navMarker.style.width = `${target.offsetWidth}px`;
+          navMarker.style.left = `${target.offsetLeft}px`;
+          navMarker.style.opacity = "1";
+        });
 
-  if (navContainer && navMarker) {
-    navLinks.forEach((link) => {
-      link.addEventListener("mouseenter", (e) => {
-        const target = e.target;
-        // Update marker position and size
-        navMarker.style.width = `${target.offsetWidth}px`;
-        navMarker.style.left = `${target.offsetLeft}px`;
-        navMarker.style.opacity = "1";
+        // Intercept anchor clicks when not on home
+        const href = link.getAttribute("href");
+        if (href && href.startsWith("/#")) {
+          link.addEventListener("click", (e) => {
+            // Only if we aren't already on home
+            if (window.location.pathname !== "/") {
+              e.preventDefault();
+              const targetId = href.substring(2); // remove '/#'
+              sessionStorage.setItem("scrollTarget", targetId);
+              window.location.href = "/";
+            }
+          });
+        }
       });
-    });
 
-    navContainer.addEventListener("mouseleave", () => {
-      navMarker.style.opacity = "0";
-    });
-  }
+      navContainer.addEventListener("mouseleave", () => {
+        navMarker.style.opacity = "0";
+      });
+    }
+
+    // Check for pending scroll target from navigation
+    const pendingScroll = sessionStorage.getItem("scrollTarget");
+    if (pendingScroll && window.location.pathname === "/") {
+      // Wait for page load / transition
+      const target = document.getElementById(pendingScroll);
+      if (target) {
+        // Slight delay to allow transition to settle
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: "smooth" });
+          sessionStorage.removeItem("scrollTarget");
+        }, 300);
+      }
+    }
+  };
+
+  // Run on initial load and after every navigation
+  document.addEventListener("astro:page-load", initHeader);
 </script>
 
 <style>

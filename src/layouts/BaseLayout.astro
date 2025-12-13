@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
@@ -29,6 +30,36 @@ const { title, description } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap"
       rel="stylesheet"
     />
+    <ClientRouter />
+    <script is:inline>
+      const getTheme = () => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+          return "light";
+        }
+        return "dark";
+      };
+
+      const setTheme = (theme) => {
+        if (theme === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        } else {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+        window.localStorage.setItem("theme", theme);
+      };
+
+      // Initial load
+      setTheme(getTheme());
+
+      // On view transition swap
+      document.addEventListener("astro:after-swap", () => setTheme(getTheme()));
+    </script>
   </head>
 
   <body>
