@@ -14,15 +14,10 @@ const allProjects = projectsData.projects;
     <div class="container hero-grid">
       <div class="hero-text">
         <p class="eyebrow">Hi, I'm Maxim</p>
-        <h1
-          id="hero-heading"
-          class="typewriter-heading"
-          aria-label="I like building things on the web."
-        >
-          <span class="type-part" data-text="I like building "></span>
-          <span class="serif-highlight type-part" data-text="things"></span>
-          <span class="type-part" data-text=" on the web."></span>
-          <span class="cursor">|</span>
+        <h1 id="hero-heading" class="hero-heading-animate">
+          <span class="reveal-text">I like building </span>
+          <span class="serif-highlight reveal-text">things</span>
+          <span class="reveal-text"> on the web</span>
         </h1>
         <p class="lead">
           This is a small personal site to collect projects, experiments, and
@@ -181,27 +176,31 @@ const allProjects = projectsData.projects;
       height: 100%;
     }
 
-    /* Typewriter Cursor */
-    .cursor {
-      display: inline-block;
-      font-weight: 100;
-      color: var(--accent);
-      margin-left: 2px;
-      animation: blink 1s step-end infinite paused; /* Only blink when done */
+    .hero-heading-animate {
+      opacity: 0; /* Hide initially to prevent FOUC */
+      animation: fadeInHeading 0.1s forwards; /* Reveal slightly after JS runs */
     }
 
-    .cursor.blinking {
-      animation-play-state: running;
-    }
-
-    @keyframes blink {
-      0%,
-      100% {
+    @keyframes fadeInHeading {
+      to {
         opacity: 1;
       }
-      50% {
-        opacity: 0;
-      }
+    }
+
+    /* Smooth Character Fade In - Global because added by JS */
+    :global(.char-reveal) {
+      opacity: 0;
+      filter: blur(8px);
+      transition:
+        opacity 1s ease,
+        filter 1s ease;
+      display: inline-block;
+      white-space: pre;
+    }
+
+    :global(.char-reveal.visible) {
+      opacity: 1;
+      filter: blur(0);
     }
   </style>
 
@@ -210,32 +209,39 @@ const allProjects = projectsData.projects;
     const grid = document.getElementById("projects-grid");
     const btns = document.querySelectorAll(".filter-btn");
 
-    // Typewriter Logic
-    const headingParts = document.querySelectorAll(".type-part");
-    const cursor = document.querySelector(".cursor");
+    // Fade Sweep Logic
+    const revealParts = document.querySelectorAll(".reveal-text");
 
-    async function typeWriter() {
-      if (!headingParts.length) return;
+    async function initFadeSweep() {
+      if (!revealParts.length) return;
 
-      // Delay start slightly
-      await new Promise((r) => setTimeout(r, 500));
-
-      for (const part of headingParts) {
-        const text = part.getAttribute("data-text") || "";
-        part.textContent = "";
+      // Split text into chars
+      revealParts.forEach((part) => {
+        const text = part.textContent || "";
+        part.textContent = ""; // Clear
 
         for (let i = 0; i < text.length; i++) {
-          part.textContent += text.charAt(i);
-          await new Promise((r) => setTimeout(r, 50 + Math.random() * 30)); // Random typing speed
+          const char = text.charAt(i);
+          const span = document.createElement("span");
+          span.textContent = char;
+          span.classList.add("char-reveal");
+          part.appendChild(span);
         }
-      }
+      });
 
-      // Blink cursor after typing
-      cursor?.classList.add("blinking");
+      // Delay start
+      await new Promise((r) => setTimeout(r, 200));
+
+      // Animate chars one by one (staggered)
+      const allChars = document.querySelectorAll(".char-reveal");
+      for (const char of allChars) {
+        char.classList.add("visible");
+        await new Promise((r) => setTimeout(r, 30)); // Stagger delay
+      }
     }
 
-    // Start typing
-    typeWriter();
+    // Start animation
+    initFadeSweep();
 
     // Initial State: Featured
     grid?.classList.add("filter-featured");
