@@ -68,11 +68,7 @@ const allProjects = projectsData.projects;
     </div>
   </section>
 
-  <section
-    id="projects"
-    class="section reveal"
-    aria-labelledby="projects-heading"
-  >
+  <section id="projects" class="section" aria-labelledby="projects-heading">
     <div class="container">
       <header class="section-header projects-header">
         <div>
@@ -89,8 +85,12 @@ const allProjects = projectsData.projects;
 
       <div class="grid cards" id="projects-grid">
         {
-          allProjects.map((project) => (
-            <div class="project-wrapper" data-featured={project.featured}>
+          allProjects.map((project, index) => (
+            <div
+              class="project-wrapper pop-reveal"
+              data-featured={project.featured}
+              style={`transition-delay: ${index * 100}ms`}
+            >
               <ProjectCard project={project} />
             </div>
           ))
@@ -202,12 +202,12 @@ const allProjects = projectsData.projects;
 
   <section
     id="socials"
-    class="section socials reveal"
+    class="section socials"
     aria-labelledby="socials-heading"
   >
     <div class="container section-inner">
       <!-- Removed two-column -->
-      <div class="socials-text">
+      <div class="socials-text reveal">
         <h2 id="socials-heading">Socials</h2>
         <p>
           You can also find me on GitHub and Instagram, or message me on
@@ -215,7 +215,7 @@ const allProjects = projectsData.projects;
         </p>
       </div>
       <div class="grid cards socials-grid">
-        <article class="card">
+        <article class="card pop-reveal" style="transition-delay: 0ms">
           <h3>GitHub</h3>
           <p>
             <a
@@ -228,7 +228,7 @@ const allProjects = projectsData.projects;
             </a>
           </p>
         </article>
-        <article class="card">
+        <article class="card pop-reveal" style="transition-delay: 100ms">
           <h3>Telegram</h3>
           <p>
             <a
@@ -241,7 +241,7 @@ const allProjects = projectsData.projects;
             </a>
           </p>
         </article>
-        <article class="card">
+        <article class="card pop-reveal" style="transition-delay: 200ms">
           <h3>Discord</h3>
           <p>
             <a

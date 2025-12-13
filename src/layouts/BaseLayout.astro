@@ -50,13 +50,14 @@ const { title, description } = Astro.props;
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("active");
-            observer.unobserve(entry.target); // Only animate once
+          } else {
+            entry.target.classList.remove("active");
           }
         });
       }, observerOptions);
 
       // Observe all elements with .reveal class
-      const revealElements = document.querySelectorAll(".reveal");
+      const revealElements = document.querySelectorAll(".reveal, .pop-reveal");
       revealElements.forEach((el) => observer.observe(el));
     </script>
   </body>
