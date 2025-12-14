@@ -22,7 +22,9 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
       <a href={homeAnchor("#now")}>Now</a>
       <a href={homeAnchor("#socials")}>Socials</a>
       <a href="/blog">Blog</a>
+    </nav>
 
+    <div class="header-actions">
       <button id="theme-toggle" aria-label="Toggle theme">
         <!-- Sun (light) -->
         <svg
@@ -77,7 +79,7 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
       >
         <span class="clock-hm">--:--</span><span class="clock-s"></span>
       </div>
-    </nav>
+    </div>
   </div>
 </header>
 

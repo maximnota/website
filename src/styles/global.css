@@ -286,6 +286,12 @@ main {
   transition: all 0.2s ease;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .main-nav a:hover {
   color: var(--accent);
   /* background: var(--accent-soft); -- Removed for sliding marker */
@@ -296,6 +302,7 @@ main {
   .site-header {
     top: 0;
     width: 100%;
+    margin-top: 0; /* Ensure no margin interferes */
     border-radius: 0;
   }
   
@@ -310,20 +317,38 @@ main {
     display: none; /* For simplicity on mobile, or implement hamburger */
   }
   
-  /* Simple mobile nav override if we want links */
+  /* Mobile Bottom Nav */
   .main-nav {
      display: flex;
      position: fixed;
-     bottom: 0;
-     left: 0;
-     width: 100%;
-     background: var(--bg-elevated);
-     padding: 1rem;
-     justify-content: space-around;
-     border-top: 1px solid var(--border-subtle);
-     z-index: 50;
+     bottom: 1rem; /* Floating slightly above bottom */
+     left: 50%;
+     transform: translateX(-50%);
+     width: auto;
+     max-width: 90%;
+     background: rgba(24, 24, 27, 0.85);
+     backdrop-filter: blur(20px) saturate(180%);
+     -webkit-backdrop-filter: blur(20px) saturate(180%);
+     padding: 0.5rem 0.75rem;
+     justify-content: center; /* Center links */
+     gap: 0.25rem;
+     border: 1px solid rgba(255, 255, 255, 0.1);
+     border-top: 1px solid rgba(255, 255, 255, 0.2);
+     border-radius: var(--radius-full);
+     box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+     z-index: 100;
   }
-}
+  
+  /* Make nav links smaller on mobile */
+  .main-nav a {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  /* Header Actions Stay Top Right */
+  .header-actions {
+    margin-left: auto; /* Push to right */
+  }}
 
 /* Hero */
 .hero {
@@ -372,6 +397,12 @@ main {
   max-width: 36rem;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 4rem 0 3rem;
+  }
 }
 
 .hero-actions {

@@ -1,0 +1,172 @@
+---
+
+---
+
+<div id="mobile-warning" class="mobile-warning" role="alert" aria-hidden="true">
+    <div class="warning-content">
+        <div class="icon-wrapper">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon"
+                ><path
+                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                ></path><line x1="12" y1="9" x2="12" y2="13"></line><line
+                    x1="12"
+                    y1="17"
+                    x2="12.01"
+                    y2="17"></line></svg
+            >
+        </div>
+        <div class="text">
+            <p class="title">Desktop Recommended</p>
+            <p class="message">
+                Some interactive features may happen to break on mobile devices.
+            </p>
+        </div>
+        <button
+            id="dismiss-warning"
+            class="dismiss-btn"
+            aria-label="Dismiss warning"
+        >
+            Got it
+        </button>
+    </div>
+</div>
+
+<script>
+    const initMobileWarning = () => {
+        const warning = document.getElementById("mobile-warning");
+        const dismissBtn = document.getElementById("dismiss-warning");
+
+        if (!warning || !dismissBtn) return;
+
+        // Check if dismissed in this session
+        const isDismissed = sessionStorage.getItem("mobile-warning-dismissed");
+
+        // Check if mobile (simplistic check matching CSS media query usually)
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+        if (isMobile && !isDismissed) {
+            // Show warning
+            warning.classList.add("visible");
+            warning.setAttribute("aria-hidden", "false");
+        }
+
+        dismissBtn.addEventListener("click", () => {
+            warning.classList.remove("visible");
+            warning.setAttribute("aria-hidden", "true");
+            sessionStorage.setItem("mobile-warning-dismissed", "true");
+        });
+    };
+
+    // Run on initial load and View Transitions
+    document.addEventListener("astro:page-load", initMobileWarning);
+</script>
+
+<style>
+    .mobile-warning {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        width: 90%;
+        max-width: 400px;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+            transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 0.5s ease;
+    }
+
+    .mobile-warning.visible {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .warning-content {
+        background: rgba(20, 20, 22, 0.85);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        border-radius: 1rem;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #ededef;
+    }
+
+    /* Light mode override */
+    :global([data-theme="light"]) .warning-content {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        color: #09090b;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .icon-wrapper {
+        background: rgba(255, 140, 66, 0.2);
+        color: #ff8c42;
+        padding: 0.5rem;
+        border-radius: 50%;
+        display: flex;
+        flex-shrink: 0;
+    }
+
+    .text {
+        flex: 1;
+    }
+
+    .title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+        line-height: 1.2;
+    }
+
+    .message {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.3;
+    }
+
+    :global([data-theme="light"]) .message {
+        color: rgba(0, 0, 0, 0.6);
+    }
+
+    .dismiss-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: inherit;
+        font-size: 0.8rem;
+        font-weight: 500;
+        padding: 0.5rem 0.8rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.2s;
+    }
+
+    :global([data-theme="light"]) .dismiss-btn {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .dismiss-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    :global([data-theme="light"]) .dismiss-btn:hover {
+        background: rgba(0, 0, 0, 0.1);
+    }
+</style>
