@@ -335,6 +335,18 @@ main {
     border-radius: 0;
     box-shadow: none;
     z-index: auto;
+    
+    /* Scrollable if needed */
+    flex: 1;
+    overflow-x: auto;
+    min-width: 0; /* Allow shrinking below content size */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+  
+  /* Hide scrollbar for Chrome/Safari */
+  .main-nav::-webkit-scrollbar {
+    display: none;
   }
   
   /* Make nav links very compact */
@@ -342,11 +354,12 @@ main {
     font-size: 0.65rem;
     padding: 0.35rem 0.5rem;
     white-space: nowrap;
+    flex-shrink: 0; /* Prevent links from squishing */
   }
 
   /* Header Actions Stay Right */
   .header-actions {
-    margin-left: auto;
+    margin-left: 0.5rem;
     gap: 0.25rem;
     flex-shrink: 0;
   }
