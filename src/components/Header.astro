@@ -19,9 +19,11 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
       <div id="nav-marker"></div>
       <a href={homeAnchor("#about")}>About</a>
       <a href={homeAnchor("#projects")}>Projects</a>
+      <a href={homeAnchor("#latest-blogs")}>Blogs</a>
+
       <a href={homeAnchor("#now")}>Now</a>
       <a href={homeAnchor("#socials")}>Socials</a>
-      <a href="/blog">Blog</a>
+      <!-- <a href="/blog">Blog</a> -->
     </nav>
 
     <div class="header-actions">

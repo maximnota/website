@@ -1,0 +1,208 @@
+---
+const allPosts = Object.values(import.meta.glob('../../blogs/*.md', { eager: true }));
+
+// Sort by date desc
+const posts = allPosts
+  .sort((a: any, b: any) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf())
+  .slice(0, 6);
+
+// Helper to format date
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+// Ensure we have enough items for a smooth loop even if few posts
+// If we have 1 post, we need many copies. If 6, maybe just double is enough.
+// We'll create a "display list" that is guaranteed to be long enough.
+// Let's aim for at least 10 items or just double the 6.
+let displayPosts = [...posts];
+while (displayPosts.length > 0 && displayPosts.length < 10) {
+    displayPosts = [...displayPosts, ...posts];
+}
+// Double it once more for the seamless loop joining
+const finalPosts = [...displayPosts, ...displayPosts];
+---
+
+{
+  posts.length > 0 && (
+    <div class="ticker-wrapper">
+      <div class="ticker-track">
+        {finalPosts.map((post: any) => (
+          <a href={`/blog/${post.file.split('/').pop().split('.').shift()}`} class="ticker-item">
+            <div class="ticker-card">
+              <div class="ticker-header">
+                <span class="ticker-date">{formatDate(post.frontmatter.pubDate)}</span>
+                <span class="ticker-tag">{post.frontmatter.tags?.[0] || 'Blog'}</span>
+              </div>
+              <h4 class="ticker-title">{post.frontmatter.title}</h4>
+              <p class="ticker-desc">{post.frontmatter.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+      <!-- Fade Masks -->
+      <div class="fade-mask left"></div>
+      <div class="fade-mask right"></div>
+    </div>
+  )
+}
+
+<style>
+  .ticker-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 2rem 0;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 5%,
+      black 95%,
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 5%,
+      black 95%,
+      transparent
+    );
+  }
+
+  @media (min-width: 1000px) {
+    .ticker-wrapper {
+      mask-image: linear-gradient(
+        to right,
+        transparent calc(50% - 500px),
+        black calc(50% - 400px),
+        black calc(50% + 400px),
+        transparent calc(50% + 500px)
+      );
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent calc(50% - 500px),
+        black calc(50% - 400px),
+        black calc(50% + 400px),
+        transparent calc(50% + 500px)
+      );
+    }
+  }
+
+  .ticker-track {
+    display: flex;
+    gap: 1.5rem;
+    width: max-content;
+    animation: scroll 40s linear infinite;
+  }
+
+  .ticker-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%); /* Because we doubled the list, -50% is one full set */
+    }
+  }
+
+  .ticker-item {
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
+  }
+
+  .ticker-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    width: 250px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease;
+  }
+
+  .ticker-card:hover {
+    background: var(--card-hover);
+    border-color: var(--card-border-hover);
+    transform: translateY(-2px);
+  }
+
+  .ticker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .ticker-date {
+    color: var(--text-muted);
+  }
+
+  .ticker-tag {
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+  }
+
+  .ticker-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--text);
+    /* Truncate lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .ticker-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    /* Truncate lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: auto; /* Push to bottom if space */
+    position: relative;
+    
+    /* Fade out effect */
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  }
+
+  /* Blur effect at bottom of description */
+  .ticker-desc::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, transparent, var(--card));
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    pointer-events: none;
+  }
+
+  /* Mobile Adjustments */
+  @media (max-width: 640px) {
+    .ticker-card {
+      width: 220px;
+      height: 130px;
+    }
+  }
+</style>

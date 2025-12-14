@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import BlogTicker from "../components/BlogTicker.astro";
 import projectsData from "../../projects.json";
 
 const allProjects = projectsData.projects;
@@ -102,6 +103,26 @@ const allProjects = projectsData.projects;
     </div>
   </section>
 
+  <!-- Latest Blogs Ticker -->
+  <section
+    id="latest-blogs"
+    class="section reveal"
+    aria-labelledby="blogs-heading"
+  >
+    <div class="container">
+      <header class="section-header">
+        <h2 id="blogs-heading">Latest Blogs</h2>
+      </header>
+    </div>
+
+    <!-- Full width ticker -->
+    <BlogTicker />
+
+    <div class="container center-cta">
+      <a href="/blog" class="btn ghost">View more</a>
+    </div>
+  </section>
+
   <section
     id="now"
     class="section section-alt reveal"
@@ -130,6 +151,13 @@ const allProjects = projectsData.projects;
       align-items: flex-end;
       flex-wrap: wrap;
       gap: 1rem;
+    }
+
+    /* Center CTA for Blogs */
+    .center-cta {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
     }
 
     .filter-toggle {
