@@ -6,9 +6,9 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
 <header class:list={["site-header", { "scroll-reveal": isHome }]} role="banner">
   <div class="container header-inner">
     <a class="brand" href={isHome ? "#top" : "/"}>
-      <div class="avatar" aria-hidden="true">
+      <!-- <div class="avatar" aria-hidden="true">
         <img src="/picture.jpg" alt="Profile picture of Maxim Gannota" />
-      </div>
+      </div> -->
       <div class="brand-text">
         <span class="brand-name">Maxim Gannota</span>
         <span class="brand-subtitle">Student · Developer in progress</span>
@@ -68,12 +68,45 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
           ></path></svg
         >
       </button>
+
+      <!-- Header Clock -->
+      <div
+        id="header-clock"
+        class="header-clock"
+        aria-label="Current time (GMT+2)"
+      >
+        <span class="clock-hm">--:--</span><span class="clock-s"></span>
+      </div>
     </nav>
   </div>
 </header>
 
 <script>
   const initHeader = () => {
+    // Clock Logic
+    const clockContainer = document.getElementById("header-clock");
+    const hmElement = clockContainer?.querySelector(".clock-hm");
+    const sElement = clockContainer?.querySelector(".clock-s");
+
+    if (clockContainer && hmElement && sElement) {
+      const updateClock = () => {
+        // GMT+2 Fixed Calculation
+        const now = new Date();
+        const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+        const targetTime = new Date(utc + 3600000 * 2);
+
+        const h = targetTime.getHours().toString().padStart(2, "0");
+        const m = targetTime.getMinutes().toString().padStart(2, "0");
+        const s = targetTime.getSeconds().toString().padStart(2, "0");
+
+        hmElement.textContent = `${h}:${m}`;
+        sElement.textContent = `:${s}`;
+      };
+
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+
     // Theme Toggle Logic
     const handleToggleClick = () => {
       const element = document.documentElement;
@@ -103,12 +136,10 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
     handleScroll(); // Check initial state
 
     // Sliding Nav Marker Logic
+    // Variables already declared above in initHeader scope, ensuring no redeclaration.
     const navContainer = document.querySelector(".main-nav") as HTMLElement;
     const navMarker = document.getElementById("nav-marker");
     const navLinks = document.querySelectorAll(".main-nav a");
-
-    // Sliding Nav Marker Logic
-    // Variables already declared above in initHeader scope, ensuring no redeclaration.
 
     if (navContainer && navMarker) {
       navLinks.forEach((link) => {
@@ -159,6 +190,40 @@ const homeAnchor = (hash: string) => (isHome ? hash : `/${hash}`);
 </script>
 
 <style>
+  /* Header Clock Styles */
+  .header-clock {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+    margin-left: 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 1px solid var(--border-subtle);
+    cursor: default;
+    display: flex;
+    align-items: center;
+    overflow: hidden; /* For revealed seconds */
+  }
+
+  .clock-s {
+    opacity: 0;
+    max-width: 0;
+    transform: translateX(-5px);
+    transition:
+      opacity 0.4s ease,
+      max-width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 0.4s ease;
+    white-space: nowrap;
+    display: inline-block;
+  }
+
+  .header-clock:hover .clock-s {
+    opacity: 1;
+    max-width: 2em; /* Enough for :SS */
+    transform: translateX(0);
+  }
+
   /* Header Scroll Animation - Only for Home */
   .site-header.scroll-reveal {
     opacity: 0;

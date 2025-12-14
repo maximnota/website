@@ -71,25 +71,32 @@ const { title, description } = Astro.props;
 
     <script>
       // Scroll Reveal Observer
-      const observerOptions = {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.1,
+      // Scroll Reveal Observer
+      const initScrollReveal = () => {
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.1,
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+              observer.unobserve(entry.target); // Reveal only once
+            }
+          });
+        }, observerOptions);
+
+        // Observe all elements with .reveal class
+        const revealElements = document.querySelectorAll(
+          ".reveal, .pop-reveal",
+        );
+        revealElements.forEach((el) => observer.observe(el));
       };
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("active");
-          } else {
-            entry.target.classList.remove("active");
-          }
-        });
-      }, observerOptions);
-
-      // Observe all elements with .reveal class
-      const revealElements = document.querySelectorAll(".reveal, .pop-reveal");
-      revealElements.forEach((el) => observer.observe(el));
+      // Run on initial load and after every View Transition
+      document.addEventListener("astro:page-load", initScrollReveal);
     </script>
   </body>
 </html>
