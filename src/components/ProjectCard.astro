@@ -18,35 +18,60 @@ type Props = {
 const { project } = Astro.props;
 ---
 
-<article class="card project">
+<article
+  class="card project project-card-clickable"
+  data-project={JSON.stringify(project)}
+>
   <div class="project-content">
     <h3>{project.title}</h3>
-    <p>{project.description}</p>
-    <ul class="tags">
-      {project.tags.map((tag) => (
-        <li>{tag}</li>
-      ))}
-    </ul>
+    <div class="project-description-wrapper">
+      <p class="project-description">{project.description}</p>
+      <div class="fade-overlay"></div>
+    </div>
   </div>
 
   <div class="project-actions">
-    {project.links?.github ? (
-      <a class="btn tiny ghost project-btn" href={project.links.github} target="_blank" rel="noopener">
-        View code on GitHub
-      </a>
-    ) : null}
+    {
+      project.links?.github ? (
+        <a
+          class="btn tiny ghost project-btn"
+          href={project.links.github}
+          target="_blank"
+          rel="noopener"
+          onclick="event.stopPropagation()"
+        >
+          View code on GitHub
+        </a>
+      ) : null
+    }
 
-    {!project.links?.github && project.links?.live ? (
-      <a class="btn tiny ghost project-btn" href={project.links.live} target="_blank" rel="noopener">
-        View live
-      </a>
-    ) : null}
+    {
+      !project.links?.github && project.links?.live ? (
+        <a
+          class="btn tiny ghost project-btn"
+          href={project.links.live}
+          target="_blank"
+          rel="noopener"
+          onclick="event.stopPropagation()"
+        >
+          View live
+        </a>
+      ) : null
+    }
 
-    {!project.links?.github && !project.links?.live && project.links?.details ? (
-      <a class="btn tiny ghost project-btn" href={project.links.details}>
-        View details
-      </a>
-    ) : null}
+    {
+      !project.links?.github &&
+      !project.links?.live &&
+      project.links?.details ? (
+        <a
+          class="btn tiny ghost project-btn"
+          href={project.links.details}
+          onclick="event.stopPropagation()"
+        >
+          View details
+        </a>
+      ) : null
+    }
   </div>
 </article>
 
@@ -55,12 +80,142 @@ const { project } = Astro.props;
     display: flex;
     flex-direction: column;
     height: 100%;
+    position: relative; /* Ensure absolute positioning works if needed */
   }
+
+  .project-card-clickable {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .project-card-clickable:hover {
+    transform: translateY(-4px);
+  }
+
   .project-content {
     flex: 1;
+    display: flex; /* Prepare for flex column on mobile if needed, harmless here */
+    flex-direction: column;
   }
+
+  .project-description-wrapper {
+    position: relative;
+    max-height: 4.5em; /* ~3 lines */
+    overflow: hidden; /* Truncate if too long */
+    margin-bottom: 0.5rem;
+  }
+
+  .project-description {
+    margin: 0;
+  }
+
+  .fade-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3em;
+    background: linear-gradient(to bottom, transparent 0%, var(--card) 100%);
+    pointer-events: none;
+    opacity: 1;
+  }
+
+  .click-more {
+    position: absolute;
+    bottom: 0.1rem;
+    right: 0.3rem;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: var(--card);
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radius-sm);
+    opacity: 1;
+    font-weight: 700;
+    pointer-events: none;
+  }
+
+  .project-card-clickable:hover .click-more {
+    color: var(--accent-strong);
+  }
+
   /* Ensure actions stick to bottom */
   .project-actions {
     margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-start; /* Default align */
+    position: relative;
+  }
+
+  @media (max-width: 768px) {
+    /* Mobile Layout Overrides */
+
+    .project-actions {
+      display: none; /* Hide buttons completely */
+    }
+
+    .project-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 2rem; /* Give space for the bottom label */
+    }
+
+    .project-description-wrapper {
+      flex: 1; /* Fill available space */
+      max-height: none; /* Remove cap to fill space */
+      margin-bottom: 0; /* Align with bottom padding */
+      position: static; /* Anchor children to card instead of wrapper */
+    }
+
+    .fade-overlay {
+      display: block !important; /* Override JS hiding */
+      height: 4rem;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      /* Stronger fade to solid background to hide text behind the button */
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--card) 60%,
+        var(--card) 100%
+      );
+    }
   }
 </style>
+
+<script>
+  function initProjectCards() {
+    const projectCards = document.querySelectorAll(".project-card-clickable");
+
+    projectCards.forEach((card) => {
+      // Check if description is truncated
+      const descWrapper = card.querySelector(".project-description-wrapper");
+      const desc = card.querySelector(".project-description");
+      const fadeOverlay = card.querySelector(".fade-overlay");
+      const clickMore = card.querySelector(".click-more");
+
+      if (descWrapper && desc && fadeOverlay && clickMore) {
+        // Check if text is overflowing
+        const isOverflowing = desc.scrollHeight > descWrapper.clientHeight;
+
+        if (!isOverflowing) {
+          // Hide fade and click text if not overflowing
+          (fadeOverlay as HTMLElement).style.display = "none";
+          (clickMore as HTMLElement).style.display = "none";
+        }
+      }
+
+      // Add click handler
+      card.addEventListener("click", () => {
+        const projectData = card.getAttribute("data-project");
+        if (projectData && (window as any).openProjectModal) {
+          const project = JSON.parse(projectData);
+          (window as any).openProjectModal(project);
+        }
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", initProjectCards);
+</script>

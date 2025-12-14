@@ -1,0 +1,236 @@
+---
+// ProjectModal.astro - Modal component for displaying full project details
+---
+
+<div id="project-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-labelledby="modal-title">
+        <button class="modal-close" aria-label="Close modal">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+
+        <div class="modal-body">
+            <h2 id="modal-title"></h2>
+            <p id="modal-description"></p>
+            <ul id="modal-tags" class="tags"></ul>
+            <div id="modal-links" class="project-actions"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        padding: 2rem;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-content {
+        background: var(--bg-elevated);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-lg);
+        max-width: 600px;
+        width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
+        position: relative;
+        padding: 2.5rem;
+        box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.5);
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal-content {
+        transform: scale(1) translateY(0);
+    }
+
+    [data-theme="light"] .modal-content {
+        box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        z-index: 1;
+    }
+
+    .modal-close:hover {
+        background: var(--accent-soft);
+        color: var(--accent);
+    }
+
+    .modal-body h2 {
+        margin-bottom: 1rem;
+        padding-right: 2rem;
+    }
+
+    .modal-body p {
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+    }
+
+    #modal-tags {
+        margin-bottom: 1.5rem;
+    }
+
+    #modal-links {
+        margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .modal-overlay {
+            padding: 1rem;
+        }
+
+        .modal-content {
+            padding: 1.5rem;
+            max-height: 90vh;
+        }
+
+        .modal-body h2 {
+            font-size: 1.25rem;
+        }
+
+        .modal-body p {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<script>
+    function initProjectModal() {
+        const modal = document.getElementById("project-modal");
+        const modalTitle = document.getElementById("modal-title");
+        const modalDescription = document.getElementById("modal-description");
+        const modalTags = document.getElementById("modal-tags");
+        const modalLinks = document.getElementById("modal-links");
+        const closeBtn = modal?.querySelector(".modal-close");
+
+        // Close modal function
+        const closeModal = () => {
+            modal?.classList.remove("active");
+            document.body.style.overflow = "";
+        };
+
+        // Close on button click
+        closeBtn?.addEventListener("click", closeModal);
+
+        // Close on overlay click
+        modal?.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close on escape key
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modal?.classList.contains("active")) {
+                closeModal();
+            }
+        });
+
+        // Open modal function (will be called from project cards)
+        (window as any).openProjectModal = (project: any) => {
+            if (
+                !modal ||
+                !modalTitle ||
+                !modalDescription ||
+                !modalTags ||
+                !modalLinks
+            )
+                return;
+
+            // Set title and description
+            modalTitle.textContent = project.title;
+            modalDescription.textContent = project.description;
+
+            // Set tags
+            modalTags.innerHTML = "";
+            project.tags.forEach((tag: string) => {
+                const li = document.createElement("li");
+                li.textContent = tag;
+                modalTags.appendChild(li);
+            });
+
+            // Set links
+            modalLinks.innerHTML = "";
+            if (project.links?.github) {
+                const link = document.createElement("a");
+                link.className = "btn tiny ghost project-btn";
+                link.href = project.links.github;
+                link.target = "_blank";
+                link.rel = "noopener";
+                link.textContent = "View code on GitHub";
+                modalLinks.appendChild(link);
+            }
+            if (project.links?.live) {
+                const link = document.createElement("a");
+                link.className = "btn tiny ghost project-btn";
+                link.href = project.links.live;
+                link.target = "_blank";
+                link.rel = "noopener";
+                link.textContent = "View live";
+                modalLinks.appendChild(link);
+            }
+            if (
+                project.links?.details &&
+                !project.links?.github &&
+                !project.links?.live
+            ) {
+                const link = document.createElement("a");
+                link.className = "btn tiny ghost project-btn";
+                link.href = project.links.details;
+                link.textContent = "View details";
+                modalLinks.appendChild(link);
+            }
+
+            // Open modal
+            modal.classList.add("active");
+            document.body.style.overflow = "hidden";
+        };
+    }
+
+    document.addEventListener("astro:page-load", initProjectModal);
+</script>
