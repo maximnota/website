@@ -31,4 +31,4 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 443
 
 # Start the server
-CMD ["serve", "dist", "-p", "3000"]
+CMD ["serve", "dist", "-p", "443"]
