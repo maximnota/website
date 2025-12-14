@@ -28,7 +28,7 @@ RUN npm install -g serve
 COPY --from=builder /app/dist ./dist
 
 # Expose port (Railway will set PORT env var)
-EXPOSE 443
+EXPOSE 3000
 
-# Start the server
-CMD ["serve", "dist", "-p", "443"]
+# Start the server - Railway's PORT env var will be used
+CMD sh -c "serve dist -p ${PORT:-3000}"
